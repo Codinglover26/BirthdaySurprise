@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Surprise</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+height:100vh;
+overflow:hidden;
+}
+
+/* MATRIX BACKGROUND */
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:black;
+z-index:-1;
+}
+
+/* GLASS BOX */
+
+.container{
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:90%;
+max-width:360px;
+padding:30px;
+
+background:rgba(255,255,255,0.1);
+backdrop-filter:blur(12px);
+border-radius:15px;
+
+text-align:center;
+color:white;
+box-shadow:0 10px 30px rgba(0,0,0,0.4);
+}
+
+h1{
+margin-bottom:10px;
+font-size:24px;
+}
+
+p{
+font-size:14px;
+margin-bottom:15px;
+}
+
+input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
+outline:none;
+margin-bottom:15px;
+}
+
+button{
+width:100%;
+padding:10px;
+border:none;
+border-radius:8px;
+background:#ff4da6;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#ff1a8c;
+}
+
+@media(max-width:480px){
+h1{font-size:20px;}
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="container">
+
+<h1>🎉 Ada yang Ultah Nih 🎉</h1>
+<p>Boleh kasih tau namanya</p>
+
+<input type="text" id="nama" placeholder="Name">
+
+<button onclick="start()">Start</button>
+
+</div>
+
+<script>
+
+/* SIMPAN NAMA DAN PINDAH PAGE */
+
+function start(){
+
+let nama = document.getElementById("nama").value;
+
+if(nama === ""){
+alert("Sombong banget sih 😤");
+return;
+}
+
+localStorage.setItem("namaUser", nama);
+
+window.location.href="surprise.html";
+
+}
+
+/* MATRIX EFFECT */
+
+const canvas = document.getElementById("matrix");
+const ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+const angka="0123456789";
+const fontSize=20;
+const columns=canvas.width/fontSize;
+
+const drops=[];
+
+for(let x=0;x<columns;x++){
+drops[x]=1;
+}
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#ff4da6";
+ctx.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+
+const text=angka[Math.floor(Math.random()*angka.length)];
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975){
+drops[i]=0;
+}
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(draw,50);
+
+</script>
+
+</body>
+</html>

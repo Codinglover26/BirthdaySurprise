@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Letter</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+height:100vh;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+overflow:hidden;
+font-family:Georgia, serif;
+}
+
+/* BACKGROUND PARTICLES */
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+}
+
+/* LETTER */
+
+.letter{
+
+position:relative;
+width:90%;
+max-width:420px;
+height:90vh;
+
+background:#f4ecd8 url("assets/paper-texture.png");
+background-size:cover;
+
+border-radius:10px;
+
+box-shadow:0 0 50px rgba(0,0,0,0.8);
+
+padding:25px;
+
+overflow:hidden;
+
+z-index:2;
+
+transform:scale(0.7);
+opacity:0;
+
+transition:1s;
+
+}
+
+.showLetter{
+transform:scale(1);
+opacity:1;
+}
+
+/* CONTENT */
+
+.content{
+position:relative;
+height:100%;
+overflow-y:auto;
+
+/* hide scrollbar */
+
+scrollbar-width:none;
+}
+
+.content::-webkit-scrollbar{
+display:none;
+}
+
+/* CONTENT AREA */
+
+.scrollContent{
+width:100%;
+padding-bottom:40px;
+}
+
+/* PHOTO */
+
+.photo{
+width:100%;
+max-height:240px;
+object-fit:cover;
+border-radius:10px;
+margin-bottom:20px;
+}
+
+/* TEXT */
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#4a2c2a;
+}
+
+.typing{
+
+font-size:16px;
+line-height:1.7;
+color:#3b2b26;
+white-space:pre-line;
+min-height:200px;
+
+}
+
+/* OPEN BUTTON */
+
+.openBtn{
+
+position:absolute;
+
+top:50%;
+left:50%;
+
+transform:translate(-50%,-50%);
+
+padding:14px 28px;
+
+font-size:16px;
+
+border:none;
+
+border-radius:8px;
+
+background:#ff4da6;
+
+color:white;
+
+cursor:pointer;
+
+z-index:3;
+
+}
+
+/* GIF */
+
+#giftGif{
+
+display:none;
+
+width:100%;
+
+max-width:220px;
+
+margin:20px auto;
+
+display:block;
+
+}
+
+/* EXIT BUTTON */
+
+#exitBtn{
+
+display:none;
+
+margin-top:25px;
+
+padding:12px 20px;
+
+border:none;
+
+border-radius:8px;
+
+background:#ff4da6;
+
+color:white;
+
+font-size:16px;
+
+cursor:pointer;
+
+width:100%;
+
+}
+
+/* MOBILE */
+
+@media(max-width:480px){
+
+.letter{
+height:92vh;
+padding:20px;
+}
+
+.photo{
+max-height:200px;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<audio autoplay loop>
+<source src="assets/Panjang_Umur.mp3" type="audio/mpeg">
+</audio>
+
+<button class="openBtn" onclick="openLetter()">Open Letter 💌</button>
+
+<div class="letter" id="letter">
+
+<div class="content">
+
+<div class="scrollContent">
+
+<img src="assets/pic1.jpeg" class="photo">
+
+<h1 id="title"></h1>
+
+<p id="typingText" class="typing"></p>
+
+<img src="assets/Gif_Ultah.png" id="giftGif">
+
+<button id="exitBtn">Close</button>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* OPEN LETTER */
+
+function openLetter(){
+
+document.querySelector(".openBtn").style.display="none";
+
+document.getElementById("letter").classList.add("showLetter");
+
+startAutoScroll();
+
+}
+
+/* AMBIL NAMA */
+
+const nama = localStorage.getItem("namaUser") || "Someone";
+
+document.getElementById("title").innerHTML =
+"Happy Birthday " + nama;
+
+/* TYPEWRITER TEXT */
+
+const text = `
+
+Ciee ada yang ultah nih, selamat yaaa
+
+Semoga di umur yang baru ini, kamu selalu diberikan kesehatan, kebahagiaan, dan kesuksesan
+
+Terus maju gapai semua impianmu, jangan pernah takut untuk mencoba hal baru
+
+Kalo ada masalah, boleh kok cerita ke aku atau temen-temen yang lain
+
+Inget, kamu nggak boleh pesimis sama nilai, karena itu cuma angka
+
+Yang penting kamu udah berusaha semaksimal mungkin
+
+Anyway, Happy Birthday to you and always be yourself.
+
+`;
+
+let index=0;
+
+function typeWriter(){
+
+if(index < text.length){
+
+document.getElementById("typingText").innerHTML += text.charAt(index);
+
+index++;
+
+setTimeout(typeWriter,40 + Math.random()*40);
+
+}else{
+
+document.getElementById("giftGif").style.display="block";
+
+document.getElementById("exitBtn").style.display="block";
+
+}
+
+}
+
+typeWriter();
+
+/* AUTO SCROLL */
+
+const container = document.querySelector(".content");
+
+let autoScrollSpeed = 0.4;
+
+let autoScroll;
+
+function startAutoScroll(){
+
+autoScroll = setInterval(()=>{
+
+container.scrollTop += autoScrollSpeed;
+
+if(container.scrollTop + container.clientHeight >= container.scrollHeight){
+
+clearInterval(autoScroll);
+
+}
+
+},20);
+
+}
+
+/* EXIT BUTTON */
+
+document.getElementById("exitBtn").onclick=function(){
+
+window.location.href="last.html";
+
+};
+
+/* PARTICLE BACKGROUND */
+
+const canvas=document.getElementById("bg");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let particles=[];
+
+for(let i=0;i<120;i++){
+
+particles.push({
+
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+size:Math.random()*2+1,
+speedX:(Math.random()-0.5)*0.6,
+speedY:(Math.random()-0.5)*0.6
+
+});
+
+}
+
+function animate(){
+
+ctx.fillStyle="rgba(0,0,0,0.25)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="white";
+
+particles.forEach(p=>{
+
+ctx.beginPath();
+ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+ctx.fill();
+
+p.x+=p.speedX;
+p.y+=p.speedY;
+
+if(p.x<0||p.x>canvas.width)p.speedX*=-1;
+if(p.y<0||p.y>canvas.height)p.speedY*=-1;
+
+});
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+</script>
+
+</body>
+</html>
